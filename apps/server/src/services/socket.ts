@@ -1,9 +1,23 @@
 import { Server } from "socket.io";
+import { createClient } from "redis";
+
+const pub = createClient({
+  url: process.env.REDIS_URI,
+});
+
+const sub = createClient({
+  url: process.env.REDIS_URI,
+});
 
 class SocketService {
   private _io: Server;
   constructor() {
-    this._io = new Server();
+    this._io = new Server({
+      cors: {
+        origin: "*",
+        allowedHeaders: ["*"],
+      },
+    });
   }
 
   public initListeners() {
@@ -14,6 +28,7 @@ class SocketService {
 
       socket.on("message", async ({ message }: { message: string }) => {
         console.log("Message received: ", message);
+        // Publish the message to all connected clients
       });
 
       socket.on("disconnect", () => {

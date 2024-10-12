@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { SocketProvider } from "@/store/SocketProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,14 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Toaster richColors position="top-right" />
-        <main className="max-w-7xl mx-auto py-10 w-screen min-h-screen">
-          {children}
-        </main>
+        <SocketProvider>
+          <Toaster richColors position="top-right" />
+          <main className="max-w-7xl mx-auto py-10 lg:px-10 px-5 w-screen min-h-screen">
+            {children}
+          </main>
+        </SocketProvider>
       </body>
     </html>
   );
