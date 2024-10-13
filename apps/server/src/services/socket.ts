@@ -1,17 +1,13 @@
 import { Server } from "socket.io";
-import { createClient } from "redis";
-
-const pub = createClient({
-  url: process.env.REDIS_URI,
-});
-
-const sub = createClient({
-  url: process.env.REDIS_URI,
-});
 
 class SocketService {
   private _io: Server;
-  constructor() {
+  private pub: any;
+  private sub: any;
+
+  constructor(pub: any, sub: any) {
+    this.pub = pub;
+    this.sub = sub;
     this._io = new Server({
       cors: {
         origin: "*",
@@ -29,6 +25,8 @@ class SocketService {
       socket.on("message", async ({ message }: { message: string }) => {
         console.log("Message received: ", message);
         // Publish the message to all connected clients
+        await this.pub.publish("Message", JSON.stringify({ message }));
+        console.log("Message published");
       });
 
       socket.on("disconnect", () => {
