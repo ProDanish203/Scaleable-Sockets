@@ -16,22 +16,22 @@ class SocketService {
     });
   }
 
-  public initListeners() {
+  public async initListeners() {
     const io = this.io;
-    console.log("Initializing socket listeners");
+
     io.on("connection", (socket) => {
       console.log("New connection", socket.id);
 
       socket.on("message", async ({ message }: { message: string }) => {
-        console.log("Message received: ", message);
-        // Publish the message to all connected clients
-        await this.pub.publish("Message", JSON.stringify({ message }));
-        console.log("Message published");
+        await this.pub.publish("Messages", JSON.stringify({ message }));
       });
 
       socket.on("disconnect", () => {
         console.log("Client disconnected", socket.id);
       });
+    });
+    await this.sub.subscribe("Messages", (message: any) => {
+      io.emit("message", JSON.parse(message));
     });
   }
 

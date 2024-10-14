@@ -12,7 +12,8 @@ export const getRedisClient = async () => {
     url: process.env.REDIS_URI,
   });
 
-  pub.on("error", (err) => console.log("Redis Client Error", err));
+  pub.on("error", (err) => console.log("Redis PUB Client Error", err));
+  sub.on("error", (err) => console.log("Redis SUB Client Error", err));
 
   await pub.connect();
   await sub.connect();
