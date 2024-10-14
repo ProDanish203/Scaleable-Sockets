@@ -5,14 +5,19 @@
   "scripts": {
     "dev": "tsc-watch --onSuccess \"node dist/index.js\"",
     "start": "node dist/index.js",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate"
   },
   "devDependencies": {
     "@types/node": "^22.7.5",
+    "prisma": "^5.20.0",
+    "ts-node": "^10.9.2",
     "tsc-watch": "^6.2.0",
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "@prisma/client": "5.20.0",
     "dotenv": "^16.4.5",
     "redis": "^4.7.0",
     "socket.io": "^4.8.0"
