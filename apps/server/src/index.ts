@@ -1,8 +1,10 @@
 import http from "http";
 import SocketService from "./services/socket";
 import { getRedisClient } from "./services/redis";
+import { startMessageConsumer } from "./services/kafka";
 
 async function init() {
+  startMessageConsumer();
   const { pub, sub } = await getRedisClient();
   const socketService = new SocketService(pub, sub);
   const server = http.createServer();
