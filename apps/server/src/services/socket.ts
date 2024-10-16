@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import { produceMessage } from "./kafka";
 
 class SocketService {
   private _io: Server;
@@ -30,8 +31,16 @@ class SocketService {
         console.log("Client disconnected", socket.id);
       });
     });
-    await this.sub.subscribe("Messages", (message: any) => {
+    await this.sub.subscribe("Messages", async (message: any) => {
       io.emit("message", JSON.parse(message));
+      // Produce message to Kafka
+      await produceMessage(JSON.parse(message).message);
+      console.log("Message sent to Kafka");
+      // await prisma.messages.create({
+      //   data: {
+      //     message: JSON.parse(message).message,
+      //   },
+      // });
     });
   }
 
